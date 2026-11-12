@@ -1,6 +1,7 @@
 # Relatório de vendas a partir de planilhas
 
 [![CI](https://github.com/artvsantos/relatorio-planilhas/actions/workflows/ci.yml/badge.svg)](https://github.com/artvsantos/relatorio-planilhas/actions/workflows/ci.yml)
+[![Programa para Windows](https://github.com/artvsantos/relatorio-planilhas/actions/workflows/windows.yml/badge.svg)](https://github.com/artvsantos/relatorio-planilhas/actions/workflows/windows.yml)
 
 Cada loja manda a planilha de vendas de um jeito: uma em Excel com título
 em cima, outra em CSV com "1.234,56", outra digitada à mão, só com o
@@ -11,6 +12,25 @@ Esta ferramenta junta todas as planilhas de uma pasta e gera, em
 segundos, um relatório em Excel pronto. As linhas com erro não são
 descartadas em silêncio: elas vão para uma aba própria, com a planilha, a
 linha e o motivo, para alguém corrigir na origem.
+
+## Baixar para Windows
+
+Para quem não programa, a ferramenta vem como um programa com janela, que
+não precisa instalar nada:
+**[baixar o RelatorioDeVendas.exe](https://github.com/artvsantos/relatorio-planilhas/releases/latest/download/RelatorioDeVendas.exe)**.
+
+![A janela do programa depois de gerar o relatório das planilhas de exemplo](docs/janela.png)
+
+1. Clique em **Escolher pasta...** e escolha a pasta com as planilhas das
+   lojas. Também dá para arrastar a pasta para cima do ícone do programa.
+2. Clique em **Gerar relatório** e escolha onde salvar.
+3. O relatório abre no Excel. Na janela fica o que foi lido de cada
+   planilha e o que deu problema.
+
+Na primeira vez, o Windows pode mostrar o aviso "O Windows protegeu o
+computador", porque o programa é novo e não tem assinatura digital (que é
+paga). Para abrir, clique em **Mais informações** e depois em **Executar
+assim mesmo**.
 
 ## O que ela entende sozinha
 
@@ -72,7 +92,7 @@ E a aba **Problemas** do exemplo:
 | loja_shopping.csv | 121 | Data: "31/09/26" não é uma data válida |
 | vendas_bairro.xlsx | 112 | Quantidade precisa ser maior que zero |
 
-## Como usar
+## Pela linha de comando
 
 Com Python 3.12 ou mais novo:
 
@@ -83,7 +103,23 @@ venv\Scripts\python -m sales_report PASTA_COM_AS_PLANILHAS
 ```
 
 Para escolher onde salvar: `-o relatorios\outubro.xlsx`. Se o relatório
-estiver aberto no Excel, a ferramenta avisa em vez de dar erro.
+estiver aberto no Excel, a ferramenta avisa em vez de dar erro. A janela
+também abre pelo Python, com `venv\Scripts\python app.py`.
+
+## Como o .exe é gerado
+
+A cada mudança, o GitHub Actions gera o `.exe` com o PyInstaller e abre o
+programa para conferir se a janela aparece. Numa tag de versão (`v1.0.0`),
+ele também publica o `.exe` na página de
+[Releases](https://github.com/artvsantos/relatorio-planilhas/releases). Para
+gerar na sua máquina:
+
+```bash
+venv\Scripts\pip install -r requirements-build.txt
+venv\Scripts\pyinstaller RelatorioDeVendas.spec
+```
+
+O programa sai em `dist\RelatorioDeVendas.exe`.
 
 ## Testes
 
@@ -92,12 +128,16 @@ pip install -r requirements-dev.txt
 pytest --cov
 ```
 
-Feito com TDD, com 100% de cobertura. O CI roda os testes no Windows e no
-Linux, do Python 3.12 ao 3.14.
+Feito com TDD, com 100% de cobertura. A janela também é testada de
+verdade, escondida e sem abrir diálogos: escolher a pasta, gerar o
+relatório em segundo plano sem travar a tela, os erros e os botões. O CI
+roda os testes no Windows e no Linux (numa tela virtual), do Python 3.12
+ao 3.14.
 
 ## Feito com
 
-Python · pandas · openpyxl · pytest · ruff · GitHub Actions
+Python · pandas · openpyxl · tkinter · PyInstaller · pytest · ruff ·
+GitHub Actions
 
 ---
 

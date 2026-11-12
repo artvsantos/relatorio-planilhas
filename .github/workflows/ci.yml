@@ -27,11 +27,21 @@ jobs:
       - name: Instalar dependências
         run: pip install -r requirements-dev.txt
 
+      - name: Tk para os testes da janela (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libtk8.6
+
       - name: Lint (ruff)
         run: ruff check .
 
-      - name: Testes, com cobertura
+      - name: Testes, com cobertura (Windows)
+        if: runner.os == 'Windows'
         run: pytest --cov
+
+      # A janela precisa de uma tela; no Linux do CI, uma tela virtual.
+      - name: Testes, com cobertura (Linux)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a pytest --cov
 
       - name: Relatório das planilhas de exemplo
         run: python -m sales_report exemplos/vendas -o relatorio.xlsx

@@ -4,7 +4,7 @@ import sys
 import pytest
 from openpyxl import load_workbook
 
-from sales_report import cli
+from sales_report import cli, generate
 from tests.helpers import write_csv, write_xlsx
 
 HEADER = ['Data', 'Produto', 'Qtd', 'Preço']
@@ -95,7 +95,7 @@ def test_report_open_in_excel(folder, tmp_path, monkeypatch, capsys):
     def locked(*args, **kwargs):
         raise PermissionError
 
-    monkeypatch.setattr(cli, 'write_report', locked)
+    monkeypatch.setattr(generate, 'write_report', locked)
 
     code = cli.main([str(folder), '-o', str(tmp_path / 'r.xlsx')])
 

@@ -1,10 +1,20 @@
 [project]
 name = "relatorio-planilhas"
-version = "0.1.0"
+version = "1.0.0"
 requires-python = ">=3.12"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Captura a saída pelo Python, sem trocar o stdout/stderr do processo a cada
+# teste: o Tcl da janela guarda os que encontrou e, com a troca, de vez em
+# quando fechava o arquivo errado e a janela seguinte não abria.
+addopts = "--capture=sys"
+# Erro escondido em thread ou ao apagar objeto do tkinter quebra o teste,
+# em vez de virar só um aviso no fim.
+filterwarnings = [
+    "error::pytest.PytestUnraisableExceptionWarning",
+    "error::pytest.PytestUnhandledThreadExceptionWarning",
+]
 
 [tool.coverage.run]
 source = ["sales_report"]
